@@ -596,8 +596,264 @@ update time：记录当前这条数据最后更新的时间
     - 主键字段，在建表时，会自动创建主键索引，主键索引在所有索引中性能最高
     - 添加唯一约束时，数据库实际上会添加唯一索引
 ## MyBatis
-### 概述
+### 入门
 #### 什么是MyBatis？
 - MyBatis是一款优秀的持久层框架，用于简化JDBC的开发
 - MyBatis本是Apache的一个开源项目iBatis，2010年这个项目由apache迁移到了google code，并且改名为MyBatis，2013年11月迁移到Github
 - [MyBatis官网](https://blog.mybatis.org/)
+#### MyBatis操作数据库具体步骤
+1. 准备工作（创建springboot工程、数据库表、实体类）
+    - 选择起步依赖：MyBatis Framework、MySQL Driver
+    - 实体类属性类型：Integer、String、Short、LocalDate、LocalDateTime
+    - 构造实体类：生成Getter and Setter、toString()、Constructor有参构造以及无参构造
+2. 引入Mybatis的相关依赖，配置Mybatis
+    - 配置数据据库的连接信息 - 四要素
+        ```
+        #驱动类名称
+        spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+        #数据库连接的url
+        spring.datasource.url=jdbc:mysql://localhost:3306/数据库名
+        #连接数据库的用户名
+        spring.datasource.username=root
+        #连接数据库的密码
+        spring.datasource.password=111111
+        ```
+3. 编写SQL语句（注解/XML）
+<p align="center">
+    <img src="./MyBatis/MyBatis1.jpg" alt="MyBatis注解示例" width="600">
+</p>
+
+4. 单元测试
+<p align="center">
+    <img src="./MyBatis/MyBatis2.jpg" alt="MyBatis单元测试示例" width="500">
+</p>
+
+#### 配置SQL提示
+- 默认在mybatis中编写SQL语句是不识别的，可以做如下配置：
+<p align="center">
+    <img src="./MyBatis/MyBatis3.jpg" alt="MyBatis单元测试示例" width="600">
+</p>
+
+- 若Idea和数据库没有建立连接，不会识别表信息，会出现不提示表名或表名爆红，在Idea中配置MySQL数据库连接即可解决
+#### JDBC介绍
+- JDBC：（Java DataBase Connectivity），就是使用Java语言操作关系型数据库的一套API
+- 本质：
+    - sun公司官方定义的一套操作所有关系型数据库的规范，即接口
+    - 各个数据库厂商去实现这套接口，提供数据库驱动jar包
+    - 我们可以使用这套接口（JDBC）编程，真正执行的代码是驱动jar包中的实现类
+#### 数据库连接池
+- 数据库连接池是个容器，负责分配、管理数据库连接（Connection）
+- 它允许应用程序重复使用一个现有的数据库连接，而不是再重新建立一个
+- 释放空闲时间超过最大空闲时间的连接，来避免因为没有释放连接而引起的数据库连接遗漏
+- 优势
+    - 资源重用
+    - 提升系统响应速度
+    - 避免数据库连接遗漏
+- 标准接口：DataSource
+    - 官方（sun）提供的数据库连接池接口，由第三方组织实现此接口
+    - 功能：获取连接 `Connection getConnection() throws SQLException;`
+- 常见产品：
+    - C3P0
+    - DBCP
+    - Druid
+    - Hikari（springboot默认）
+- Druid（德鲁伊）
+    - Druid连接池是阿里巴巴开源的数据库连接池项目
+    - 功能强大，性能优秀，是Java语言最好的数据库连接池之一
+- 切换Druid数据库连接池
+    - [官方地址](https://github.com/alibaba/druid/tree/master/druid-spring-boot-starter)
+    - 引入Druid数据库连接池起步依赖
+        ```
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.2.8</version>
+        </dependency>
+        ```
+    - 配置数据库连接信息
+        ```
+        spring.datasource.(druid.)url=jdbc:mysql://localhost:3306/数据库名
+        spring.datasource.(druid.)username=root
+        spring.datasource.(druid.)password=111111
+        spring.datasource.(druid.)driver-class-name=com.mysql.cj.jdbc.Driver
+        ```
+#### Lombok
+- Lombok是一个实用的Java类库，能通过注解的形式自动生成构造器、getter/setter、equals、hashcode、toString等方法，并可以自动化生成日志变量，简化java开发、提高效率
+- 常用注解：
+    注解|作用
+    :-|:-
+    @Getter/@Setter|为所有的属性提供get/set方法
+    @ToString|会给类自动生成易阅读的toString方法
+    @EqualsAndHashCode|据类所拥有的非静态字段自动重写equals方法和hashcode方法
+    @Data|提供了更综合的生成代码功能（@Getter+@Setter+@ToString+@EqualsAndHashcode）
+    @NoArgsConstructor|为实体类生成无参的构造器方法
+    @AllArgsConstructor|为实体类生成除了static修饰的字段之外带有各参数的构造器方法
+- 引入Lombok依赖（起步依赖中勾选也可引入）
+    ```
+    <dependency>
+        <groupld>org.projectlombok</groupld>
+        <artifactId>lombok</artifactId>
+    </dependency>
+    ```
+    - 无需指定version版本号，springboot父工程中集成了Lombok，将Lombok的版本统一进行管理
+- 原理：在编译时期，根据对应的注解生成对应的方法
+- 注意事项：Lombok会在编译时，自动生成对应的java代码，我们使用Lombok时，还需要安装一个Lombok的插件（Lombok，Idea自带）
+### 基础操作
+- 环境准备
+    - 字段名在数据库表结构中使用下划线分隔，在实体类属性中采用标准的驼峰命名
+- 删除
+    - MyBatis提供的参数占位符`#{}`
+    - 增删改操作语句的返回值代表此次操作影响的记录数
+    - SQL语句：`delete from 表名 where 字段名 = 字段值;`
+    - 接口方法：
+        ```
+        @Delete("delete from 表名 where 字段名 = #{字段值}")
+        public void delete(字段类型 字段名);
+        ```
+    - 注意事项：如果mapper接口方法形参只有一个普通类型的参数，#{...}里面的属性名可以随便写，如：#{id}、#{value}
+- 日志输出：可以在application.properties中，打开mybatis的日志，并指定输出到控制台
+    ```
+    #指定mybatis输出日志的位置，输出到控制台
+    mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
+    ```
+- 预编译SQL
+    - 性能更高
+    - 更安全（防止SQL注入）
+- SQL注入
+    - SQL注入是通过操作输入的数据来修改事先定义好的SQL语句，以达到执行代码对服务器进行攻击的方法
+- 参数占位符
+    - `#{...}`
+        - 执行SQL时，会将`#{...}`替换为?，生成预编译SQL，会自动设置参数值
+        - 使用时机：参数传递，都使用`#{...}`
+    - `${...}`
+        - 拼接SQL，直接将参数拼接在SQL语句中，存在SQL注入问题
+        - 使用时机：如果对表名、列表进行动态设置时使用
+- 新增
+    - SQL语句：`insert into 表名(字段名1,字段名2,...) values('字段值1,字段值2,...');`
+    - 接口方法：
+        ```
+        @Insert("insert into 表名(字段名1,字段名2,...) values(#{属性名1},#{属性名2},...)")
+        public void insert(对象 对象名)
+        ```
+    - 注意： 如果有多个参数，可以使用实体对象将多个参数封装起来，在sql语句中使用`#{}`这种参数占位符的形式获取对象中的属性，即填写属性名而非字段名，属性名使用驼峰命名
+    - 主键返回
+        - 描述：在数据添加成功后，需要获取插入数据库数据的主键
+        - 实现：
+            ```
+            #会自动将生成的主键值赋值给对象的指定属性
+            @Options(KeyProperty='属性名',useGeneratedKeys=true)
+            @Insert("insert into 表名(字段名1,字段名2,...) values(#{属性名1},#{属性名2},...)")
+            public void insert(对象 对象名);
+            ```
+- 更新
+    - SQL语句：`update 表名 set 字段名1='字段值1',字段名2='字段值2',... where 条件;`
+    - 接口方法：
+        ```
+        @Update("update 表名 set 字段名1=#{属性名1},字段名2=#{属性名2},... where 条件")
+        public void update(对象 对象名);
+        ```
+- 查询
+    - 根据ID查询
+        - SQL语句：`select * from 表名 where id = id值;`
+        - 接口方法：
+            ```
+            @Select("select * from 表名 where id = #{id}")
+            public 对象名 getById(Integer id);
+            ```
+    - 条件查询
+        - SQL语句：`select * from 表名 where 字段名1 like '%字段值1%' and 字段名2 = 字段值2 and ... order by 字段名3 desc;`
+        - 接口方法1：
+            ```
+            @Select("select * from 表名 where 字段名1 like '$形参1%' and 字段名2 = 形参2 and ... order by 字段名3 desc")
+            public List<对象名> list(形参1类型 形参1, 形参2类型 形参2,...);
+            ```
+        - concat：字符串拼接函数
+        - 接口方法2（推荐）（在spingboot的2.x版本）：
+            ```
+            @Select("select * from 表名 where 字段名1 like concat('%',#{形参1},'%') and 字段名2 = 形参2 and ... order by 字段名3 desc")
+            public List<对象名> list(形参1类型 形参1, 形参2类型 形参2,...);
+            ```
+        - 接口方法3（在spingboot的3.x版本/单独使用mybatis）：
+            ```
+            @Select("select * from 表名 where 字段名1 like concat('%',#{指定形参名1},'%') and 字段名2 = 指定形参名2 and ... order by 字段名3 desc")
+            public List<对象名> list(@Param("指定形参名1")形参1类型 形参1, @Param("指定形参名2")形参2类型 形参2,...);
+            ```
+- 数据封装
+    - 实体类属性名和数据库表查询返回的字段名一致，mybatis会自动封装
+    - 如果实体类属性名和数据库表查询返回的字段名不一致，不能自动封装
+    - 解决方案：
+        - 起别名：在SQL语句中，对不一样的列名起别名，别名和实体类属性名一样
+        - 手动结果映射：通过@Results及@Result进行手动结果映射
+            ```
+            @Results({
+                @Result(column="a_column",property="aColumn"),
+                ...
+            })
+            ```
+        - 开启驼峰命名：如果字段名与属性名符合驼峰命名规则，mybatis会自动通过驼峰命名规则映射
+            ```
+            #开启驼峰命名自动映射，即从数据库字段名a_column映射到Java属性名aColumn
+            mybatis.configuration.map-underscore-to-camel-case=true
+            ```
+### XML映射文件
+#### 规范
+- XML映射文件的名称与Mapper接口名称一致，并且将XML映射文件和Mapper接口放置在相同包下（同包同名）
+    - 不同于java目录下New Package创建包用`.`分隔，在resources目录下New Directory创建包需要用`/`分隔
+    - xml配置文件中需要约束，官方文档拷贝如下：
+        ```
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper
+            PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+            "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        ```
+- XML映射文件的namespace属性为Mapper接口全限定名（接口右键选择Copy Reference）一致
+- XML映射文件中sql语句的id与Mapper接口中的方法名一致，并保持返回类型一致(resultType：单条记录所封装的类型，右键选择Copy Reference)
+#### 基于XML映射语句的示例
+```
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mybatis.example.BlogMapper">
+    <select id="selectBlog" resultType="Blog">
+        select * from Blog where id = #{id}
+    </select>
+</mapper>
+```
+#### MybatisX
+- MyBatisX是一款基于IDEA的快速开发MyBatis的插件，为效率而生
+#### 说明
+- 使用MyBatis的注解，主要是来完成一些简单的增删改查功能。如果需要实现复杂的SQL功能，建议使用XML来配置映射语句
+- [官方文档](https://mybatis.net.cn/getting-started.html)
+### 动态SQL
+#### 概述
+- 随着用户的输入或外部条件的变化而变化的SQL语句，我们称为动态SQL
+#### 标签
+- \<if>：用于判断条件是否成立。使用test属性进行条件判断，如果条件为true，则拼接SQL
+    - 形式：
+        ```
+        <if test="name != null">
+        ...
+        <if>
+        ```
+- \<where>：where元素只会在子元素有内容的情况下才插入where子句，而且会自动去除子句开头的and或or
+- \<set>：动态地在行首插入set关键字，并会删掉额外的逗号（用在update语句中）
+- \<foreach>（循环遍历元素）：
+    - 形式：
+        ```
+        <delete id="deleteByIds">
+            delete from 表名 where id in
+            <foreach collection="ids" item="id" separator="," open="(" close=")">
+                #{id}
+            </foreach>
+        </delete>
+        ```
+    - 属性：
+        - collection：集合名称
+        - item：集合遍历出的元素/项
+        - separator：每一次遍历使用的分隔符
+        - open：遍历开始前拼接的片段
+        - close：遍历结束后拼接的片段
+- SQL片段：
+    - \<sql>：定义可重用的SQL片段，通过属性id指定唯一标识
+    - \<include>：通过属性refid，指定包含的SQL片段
