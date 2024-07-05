@@ -347,8 +347,8 @@ public class Result {
 - MySQL中的数据类型有很多，主要分为三类：数值类型、字符串类型、日期时间类型  
 参照《MySQL数据类型》
 - 注意事项：  
-create time：记录的是当前这条数据插入的时间  
-update time：记录当前这条数据最后更新的时间
+create time：记录的是当前这条数据插入的时间（默认值CURRENT_TIMESTAMP）  
+update time：记录当前这条数据最后更新的时间（默认值CURRENT_TIMESTAMP）
 #### 查询&修改&删除
 - 查询
     - 查询当前数据库所有表：`show tables;`
@@ -890,5 +890,75 @@ update time：记录当前这条数据最后更新的时间
         ```
     - 实体类中的属性与表结构中的字段一一对应，实体类中属性名采用驼峰命名，表结构中字段采用下划线分隔，实体类上添加`@Data`、`@NoArgsConstructor`、`@AllArgsConstructor`注解
 4. 准备对应的Mapper、Service（接口、实现类）、Controller基础结构
-    1. 定义持久层接口，连包带类一起创建：`mapper.TestMapper`，添加`@mapper`注解，框架自动自动生成该接口的实现类对象，不需要再次创建该接口的实现类
-    2. 定义Service层接口以及方法，连包带类一起创建：`Service.TestService`，定义Service层实现类，连包带类一起创建：`impl.TestServiceImpl`，让该实现类实现接口以及方法
+    1. 定义Controller层实现类，连包带类一起创建：`controller.TestController`，添加`@RestController`注解；  
+    定义service层对象，使用注解`@Autowired`注入所依赖的service层的bean对象以使用其方法
+    2. 定义Service层接口以及方法，连包带类一起创建：`service.TestService`；  
+    定义Service层实现类，连包带类一起创建：`impl.TestServiceImpl`，添加`@Service`注解，让该实现类实现接口以及方法；  
+    定义mapper层对象，使用注解`@Autowired`注入所依赖的mapper层的bean对象以使用其方法
+    3. 定义持久层接口，连包带类一起创建：`mapper.TestMapper`，添加`@mapper`注解  
+    框架自动自动生成该接口的实现类对象并将该对象交给IOC容器管理，不需要再次创建该接口的实现类
+### 开发规范
+- 前后端分离模式
+- 接口文档维护平台
+    - 在线：YApi
+    - 离线：markdown、word、记事本
+#### Restful
+- REST（REpresentational State Transfer），表述性状态转换，它是一种软件架构风格
+- 传统风格：
+    ```
+    http://localhost:8080/user/getById?id=1     GET：查询id为1的用户
+    http://localhost:8080/user/saveUser         POST：新增用户
+    http://localhost:8080/user/updateUser       POST：修改用户
+    http://localhost:8080/user/deleteUser?id=1  GET：删除id为1的用户
+    ```
+- REST风格：
+    ```
+    http://localhost:8080/users/1  GET：查询id为1的用户
+    http://localhost:8080/users    POST：新增用户
+    http://localhost:8080/users    PUT：修改用户
+    http://localhost:8080/users/1  DELETE：删除id为1的用户
+    ```
+- 注意事项：
+    - REST是风格，是约定方式，约定不是规定，可以打破
+    - 描述模块的功能通常使用复数，也就是加s的格式来描述，表示此类资源，而非单个资源，如：users、emps、books...
+#### 统一响应结果
+- 前后端交互统一响应结果Result：
+    ```
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class Result {
+        private Integer code;//响应码，1 代表成功; 0 代表失败
+        private String msg;  //响应信息 描述字符串
+        private Object data; //返回的数据
+
+        //增删改 成功响应
+        public static Result success(){
+            return new Result(1,"success",null);
+        }
+        //查询 成功响应
+        public static Result success(Object data){
+            return new Result(1,"success",data);
+        }
+        //失败响应
+        public static Result error(String msg){
+            return new Result(0,msg,null);
+        }
+    }
+    ```
+#### 开发流程
+1. 查看页面原型，明确需求
+2. 根据页面原型以及需求定义表结构以及接口文档
+3. 阅读接口文档，进行思路分析
+4. 进行功能接口开发
+5. 接口测试（postman）
+6. 前后端联调测试
+#### 记录日志
+- 采用日志记录框架Logback记录日志，定义一个日志记录对象（slf4j包下）：  
+`private static Logger log = LoggerFactory.getlogger(XxxxController.class);`  
+调用该日志记录对象中的info方法输出日志：  
+`log.info("日志信息")`
+- Lombok提供`@Slf4j`注解，可以直接调用log中的info（debug等）方法记录日志
+#### 指定请求方式
+- `@RequestMapping`注解中method属性用于指定请求方式
+- spring提供了`@RequestMapping`注解的衍生注解`@GetMapping`、`@PostMapping`、`@PutMapping`、`@DeleteMapping`等

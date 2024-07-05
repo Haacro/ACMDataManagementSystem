@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class AcmDataManagementSystemApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(AcmDataManagementSystemApplication.class, args);
     }
 
