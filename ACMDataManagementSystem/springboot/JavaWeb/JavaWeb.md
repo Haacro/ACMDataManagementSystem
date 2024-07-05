@@ -869,4 +869,26 @@ update time：记录当前这条数据最后更新的时间
 </p>
 
 3. 配置文件application.properties中引入mybatis的配置信息，准备对应的实体类
+    - mybatis的配置信息
+        ```
+        spring.application.name=ACMDataManagementSystem
+
+        #驱动类名称
+        spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+        #数据库连接的url
+        spring.datasource.url=jdbc:mysql://localhost:3306/test
+        #连接数据库的用户名
+        spring.datasource.username=root
+        #连接数据库的密码
+        spring.datasource.password=111111
+
+        #指定mybatis输出日志的位置，输出到控制台
+        mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
+
+        #开启驼峰命名自动映射，即从数据库字段名a_column映射到Java属性名aColumn
+        mybatis.configuration.map-underscore-to-camel-case=true
+        ```
+    - 实体类中的属性与表结构中的字段一一对应，实体类中属性名采用驼峰命名，表结构中字段采用下划线分隔，实体类上添加`@Data`、`@NoArgsConstructor`、`@AllArgsConstructor`注解
 4. 准备对应的Mapper、Service（接口、实现类）、Controller基础结构
+    1. 定义持久层接口，连包带类一起创建：`mapper.TestMapper`，添加`@mapper`注解，框架自动自动生成该接口的实现类对象，不需要再次创建该接口的实现类
+    2. 定义Service层接口以及方法，连包带类一起创建：`Service.TestService`，定义Service层实现类，连包带类一起创建：`impl.TestServiceImpl`，让该实现类实现接口以及方法
