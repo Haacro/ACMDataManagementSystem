@@ -857,3 +857,16 @@ update time：记录当前这条数据最后更新的时间
 - SQL片段：
     - \<sql>：定义可重用的SQL片段，通过属性id指定唯一标识
     - \<include>：通过属性refid，指定包含的SQL片段
+## SpringBoot后端工程
+### 环境搭建
+1. 准备数据库表
+2. 创建springboot工程，引入对应的起步依赖（web、mybatis、mysql驱动、lombok）
+<p align="center">
+    <img src="./SpringBoot/SpringBoot1.jpg" alt="创建SpringBoot工程示例" width="600">
+</p>
+<p align="center">
+    <img src="./SpringBoot/SpringBoot2.jpg" alt="创建SpringBoot工程起步依赖" width="600">
+</p>
+
+3. 配置文件application.properties中引入mybatis的配置信息，准备对应的实体类
+4. 准备对应的Mapper、Service（接口、实现类）、Controller基础结构
