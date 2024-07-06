@@ -8,4 +8,6 @@ public interface StuService {
     List<Stu> getAll();
 
     void deleteById(Integer id);
+
+    void add(Stu stu);
 }
