@@ -963,3 +963,4 @@ update time：记录当前这条数据最后更新的时间（默认值CURRENT_T
 - `@RequestMapping`注解中method属性用于指定请求方式
 - spring提供了`@RequestMapping`注解的衍生注解`@GetMapping`、`@PostMapping`、`@PutMapping`、`@DeleteMapping`等
 - 注意事项：一个完整的请求路径，应该是类上的@RequestMapping的value属性+方法上的@RequestMapping的value属性
+- @RequestParam的属性defaultValue可以来设置参数的默认值

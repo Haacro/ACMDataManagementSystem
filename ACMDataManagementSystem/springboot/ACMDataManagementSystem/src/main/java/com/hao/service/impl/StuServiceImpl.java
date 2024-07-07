@@ -1,6 +1,9 @@
 package com.hao.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.hao.mapper.StuMapper;
+import com.hao.pojo.PageBean;
 import com.hao.pojo.Stu;
 import com.hao.service.StuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +18,10 @@ public class StuServiceImpl implements StuService {
     @Autowired
     private StuMapper stuMapper;
 
-    @Override
+    /*@Override
     public List<Stu> getAll() {
         return stuMapper.getAll();
-    }
+    }*/
 
     @Override
     public void deleteById(Integer id) {
@@ -31,5 +34,19 @@ public class StuServiceImpl implements StuService {
         stu.setUpdateTime(LocalDateTime.now());
 
         stuMapper.insert(stu);
+    }
+
+    @Override
+    public PageBean page(Integer page, Integer pageSize) {
+        //1. 设置分页参数
+        PageHelper.startPage(page,pageSize);
+
+        //2. 执行查询
+        List<Stu> stuList = stuMapper.list();
+        Page<Stu> p = (Page<Stu>) stuList;
+
+        //3. 封装PageBean对象
+        PageBean pageBean = new PageBean(p.getTotal(), p.getResult());
+        return pageBean;
     }
 }
