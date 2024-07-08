@@ -5,9 +5,13 @@ import com.hao.pojo.Result;
 import com.hao.pojo.Stu;
 import com.hao.service.StuService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.Inet4Address;
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -25,25 +29,34 @@ public class StuController {
         return Result.success(stuList);
     }*/
 
-    @DeleteMapping("/{id}")
+    /*@DeleteMapping("/{id}")
     public Result deleteById(@PathVariable Integer id) {
         log.info("根据ID删除学生用户:{}", id);
         stuService.deleteById(id);
         return Result.success();
-    }
+    }*/
 
     @PostMapping
     public Result add(@RequestBody Stu stu) {
-        log.info("新增学生用户:{}",stu.getStuName());
+        log.info("新增学生用户:{}", stu.getStuName());
         stuService.add(stu);
         return Result.success();
     }
 
     @GetMapping
     public Result page(@RequestParam(defaultValue = "1") Integer page,
-                       @RequestParam(defaultValue = "10") Integer pageSize) {
-        log.info("分页查询，参数:{},{}",page,pageSize);
-        PageBean pageBean = stuService.page(page,pageSize);
+                       @RequestParam(defaultValue = "10") Integer pageSize,
+                       String stuNo, String stuName, String className, Short gender, String school
+            /*, @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate time*/) {
+        log.info("分页查询，参数:{},{},{},{},{},{},{}", page, pageSize, stuNo, stuName, className, gender, school);
+        PageBean pageBean = stuService.page(page, pageSize, stuNo, stuName, className, gender, school);
         return Result.success(pageBean);
+    }
+
+    @DeleteMapping("/{ids}")
+    public Result deleteByIds(@PathVariable List<Integer> ids) {
+        log.info("批量删除，ids:{}", ids);
+        stuService.deleteByIds(ids);
+        return Result.success();
     }
 }

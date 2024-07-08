@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hao.mapper.StuMapper">
+    <select id="list" resultType="com.hao.pojo.Stu">
+        select id, stu_no, stu_name, class_name, gender, school, stu_score, create_time, update_time
+        from stu
+        <where>
+            <if test="stuNo != null">
+                stu_no like concat('%', #{stuNo}, '%')
+            </if>
+            <if test="stuName != null">
+                and stu_name like concat('%', #{stuName}, '%')
+            </if>
+            <if test="className != null">
+                and class_name like concat('%', #{className}, '%')
+            </if>
+            <if test="gender != null">
+                and gender = #{gender}
+            </if>
+            <if test="school != null">
+                and school like concat('%', #{school}, '%')
+            </if>
+        </where>
+        order by stu_score
+    </select>
+
+    <delete id="deleteByIds">
+        delete
+        from stu
+        where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

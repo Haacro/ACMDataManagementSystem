@@ -14,7 +14,7 @@ public class Stu {
     private String stuNo;
     private String stuName;
     private String className;
-    private Integer gender;
+    private Short gender;
     private String school;
     private Integer stuScore;
     private LocalDateTime createTime;

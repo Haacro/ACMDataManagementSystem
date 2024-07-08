@@ -23,30 +23,35 @@ public class StuServiceImpl implements StuService {
         return stuMapper.getAll();
     }*/
 
-    @Override
+    /*@Override
     public void deleteById(Integer id) {
         stuMapper.deleteById(id);
-    }
+    }*/
 
     @Override
     public void add(Stu stu) {
         stu.setCreateTime(LocalDateTime.now());
         stu.setUpdateTime(LocalDateTime.now());
-
         stuMapper.insert(stu);
     }
 
     @Override
-    public PageBean page(Integer page, Integer pageSize) {
+    public PageBean page(Integer page, Integer pageSize, String stuNo, String stuName,
+                         String className, Short gender, String school) {
         //1. 设置分页参数
-        PageHelper.startPage(page,pageSize);
+        PageHelper.startPage(page, pageSize);
 
         //2. 执行查询
-        List<Stu> stuList = stuMapper.list();
+        List<Stu> stuList = stuMapper.list(stuNo, stuName, className, gender, school);
         Page<Stu> p = (Page<Stu>) stuList;
 
         //3. 封装PageBean对象
         PageBean pageBean = new PageBean(p.getTotal(), p.getResult());
         return pageBean;
+    }
+
+    @Override
+    public void deleteByIds(List<Integer> ids) {
+        stuMapper.deleteByIds(ids);
     }
 }
