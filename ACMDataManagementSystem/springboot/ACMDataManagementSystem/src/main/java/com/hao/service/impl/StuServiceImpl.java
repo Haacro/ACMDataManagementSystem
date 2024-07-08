@@ -51,6 +51,11 @@ public class StuServiceImpl implements StuService {
     }
 
     @Override
+    public Stu getById(Integer id) {
+        return stuMapper.getById(id);
+    }
+
+    @Override
     public void deleteByIds(List<Integer> ids) {
         stuMapper.deleteByIds(ids);
     }

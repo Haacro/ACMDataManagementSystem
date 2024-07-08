@@ -26,5 +26,9 @@ public interface StuMapper {
             "school, stu_score, create_time, update_time from stu")*/
     public List<Stu> list(String stuNo, String stuName, String className, Short gender, String school);
 
+    @Select("select id, stu_no, stu_name, class_name, gender, school," +
+            "stu_score, create_time, update_time from stu where id = #{id}")
+    Stu getById(Integer id);
+
     void deleteByIds(List<Integer> ids);
 }

@@ -15,5 +15,7 @@ public interface StuService {
     PageBean page(Integer page, Integer pageSize, String stuNo, String stuName,
                   String className, Short gender, String school);
 
+    Stu getById(Integer id);
+
     void deleteByIds(List<Integer> ids);
 }

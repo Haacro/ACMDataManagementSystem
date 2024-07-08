@@ -53,6 +53,13 @@ public class StuController {
         return Result.success(pageBean);
     }
 
+    @GetMapping("/{id}")
+    public Result getById(@PathVariable Integer id) {
+        log.info("根据ID查询学生用户,id:{}", id);
+        Stu stu = stuService.getById(id);
+        return Result.success(stu);
+    }
+
     @DeleteMapping("/{ids}")
     public Result deleteByIds(@PathVariable List<Integer> ids) {
         log.info("批量删除，ids:{}", ids);
