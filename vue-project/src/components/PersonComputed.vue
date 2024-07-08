@@ -1,51 +1,39 @@
 <template>
     <div class = 'Person'>
-        姓: <input type="text" v-model = "firstName"> <br>
-        名: <input type="text" v-model = "lastName"> <br>
-        全名: <span>{{fullName}}</span> <br>
-        <button @click="changeFullName">改全名</button>
+        <h2>当前求和为：{{ sum }}</h2>
+        <button @click = "add">sum + 1</button>
+        <hr>
+        <img v-for="(dog, index) in dogList" :src = "dog" :key="index">
+        <br>
+        <button @click="getDog">dog again</button>
     </div>
 </template>
-   
-<script lang = "ts">
-       export default {
-           name : 'Person',
-       }
-</script>
 
-<script lang = "ts" setup>
-        import {ref, computed} from 'vue'
-        let firstName = ref('赵')
-        let lastName = ref('飞')
-        let fullName = computed({
-            get() {
-                return firstName.value.slice(0, 1).toUpperCase() + firstName.value.slice(1) + '-' + lastName.value;
-            },
-            set(val) {
-                const[firstTempName, lastTempName] = val.split('-')
-                firstName.value = firstTempName
-                lastName.value = lastTempName
-            }
-            
-        })
-        function changeFullName() {
-            fullName.value = 'li-si'
-        }
+<script lang = "ts" setup name = Person>
+   import useSum from '@/hooks/useSum';
+   import useDog from '@/hooks/useDog';
+   const {sum, add} = useSum()
+   const {dogList, getDog} = useDog()
 
 </script>
 
-<style>
-    .person {
-           background-color: #9a5757;
-           box-shadow: 0 0 10px;
+<style scoped>
+    .Person {
+           background-color: #4bb88b;
+           box-shadow: 0 0 20px;
            border-radius: 10px;
-           padding: 20px;
+           padding: 30px;
     }
     button {
-        margin: 0 5px;
+        margin: 0 35px;
+        font-size: large;
     }
     li {
         font-size: 30px;
+    }
+    img {
+        height: 100px;
+        margin-right: 10px;
     }
 </style>
    
