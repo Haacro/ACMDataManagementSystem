@@ -1,32 +1,23 @@
 <template>
-  <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="date" label="Date" width="180" />
-    <el-table-column prop="name" label="Name" width="180" />
-    <el-table-column prop="address" label="Address" />
-  </el-table>
+  <div>
+    <vxe-table :data="tableData">
+      <vxe-column type="seq" title="Seq" width="60"></vxe-column>
+      <vxe-column field="name" title="Name"></vxe-column>
+      <vxe-column field="role" title="Role"></vxe-column>
+      <vxe-colgroup title="Group1">
+        <vxe-column field="sex" title="Sex"></vxe-column>
+        <vxe-column field="address" title="Address"></vxe-column>
+      </vxe-colgroup>
+    </vxe-table>
+  </div>
 </template>
 
 <script lang="ts" setup>
-const tableData = [
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-]
+import { ref } from 'vue'
+
+const tableData = ref([
+  { id: 10001, name: 'Test1', role: 'Develop', sex: 'Man', address: 'Shenzhen' },
+  { id: 10002, name: 'Test2', role: 'Test', sex: 'Man', address: 'Guangzhou' },
+  { id: 10003, name: 'Test3', role: 'PM', sex: 'Man', address: 'Shanghai' }
+])
 </script>

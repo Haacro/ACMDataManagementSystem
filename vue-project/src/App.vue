@@ -1,6 +1,5 @@
 <template>
   <div class="header">
-      <!-- 折叠按钮 -->
       <div class="header-left">
           <img class="logo" src="./assets/img/logo.jpg" alt="" />
           <div class="web-title">ACDC</div>

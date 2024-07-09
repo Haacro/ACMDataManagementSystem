@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { reactive } from 'vue';
+import { reactive, onMounted } from 'vue';
 
 export default function () {
     let dogList = reactive([
@@ -10,6 +10,9 @@ export default function () {
         let result =await axios.get('https://dog.ceo/api/breed/pembroke/images/random')
         dogList.push(result.data.message)
     }
+    onMounted(()=> {
+        getDog()
+    })
     return {dogList, getDog}
 } 
 
