@@ -34,4 +34,29 @@
             #{id}
         </foreach>
     </delete>
+
+    <update id="update">
+        update stu
+        <set>
+            <if test="stuNo != null">
+                stu_no = #{stuNo},
+            </if>
+            <if test="stuName != null">
+                stu_name = #{stuName},
+            </if>
+            <if test="className != null">
+                class_name = #{className},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="school != null">
+                school = #{school},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

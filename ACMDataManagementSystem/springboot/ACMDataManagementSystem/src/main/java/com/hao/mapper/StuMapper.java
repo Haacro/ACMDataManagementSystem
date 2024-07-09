@@ -31,4 +31,6 @@ public interface StuMapper {
     Stu getById(Integer id);
 
     void deleteByIds(List<Integer> ids);
+
+    void update(Stu stu);
 }

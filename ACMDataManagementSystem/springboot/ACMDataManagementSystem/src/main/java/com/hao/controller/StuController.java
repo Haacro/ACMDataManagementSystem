@@ -66,4 +66,11 @@ public class StuController {
         stuService.deleteByIds(ids);
         return Result.success();
     }
+
+    @PutMapping
+    public Result update(@RequestBody Stu stu) {
+        log.info("更新学生用户信息:{}",stu);
+        stuService.update(stu);
+        return Result.success();
+    }
 }

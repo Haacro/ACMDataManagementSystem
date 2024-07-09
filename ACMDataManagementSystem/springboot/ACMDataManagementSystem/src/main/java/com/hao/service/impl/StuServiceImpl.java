@@ -59,4 +59,10 @@ public class StuServiceImpl implements StuService {
     public void deleteByIds(List<Integer> ids) {
         stuMapper.deleteByIds(ids);
     }
+
+    @Override
+    public void update(Stu stu) {
+        stu.setUpdateTime(LocalDateTime.now());
+        stuMapper.update(stu);
+    }
 }
