@@ -960,7 +960,41 @@ update time：记录当前这条数据最后更新的时间（默认值CURRENT_T
 `log.info("日志信息")`
 - Lombok提供`@Slf4j`注解，可以直接调用log中的info（debug等）方法记录日志
 #### 指定请求方式
-- `@RequestMapping`注解中method属性用于指定请求方式
-- spring提供了`@RequestMapping`注解的衍生注解`@GetMapping`、`@PostMapping`、`@PutMapping`、`@DeleteMapping`等
+- @RequestMapping注解中method属性用于指定请求方式
+- spring提供了@RequestMapping注解的衍生注解`@GetMapping`、`@PostMapping`、`@PutMapping`、`@DeleteMapping`等
 - 注意事项：一个完整的请求路径，应该是类上的@RequestMapping的value属性+方法上的@RequestMapping的value属性
 - @RequestParam的属性defaultValue可以来设置参数的默认值
+#### 配置文件
+- @Value注解通常用于外部配置的属性注入，具体用法为：`(@Value("${配置文件中的key}")`
+- yml格式
+    - 基本语法
+        - 大小写敏感
+        - 数值前边必须有空格，作为分隔符
+        - 使用缩进表示层级关系，缩进时，不允许使用Tab键，只能用空格（idea中会自动将Tab转换为空格）
+        - 缩进的空格数目不重要，只要相同层级的元素左侧对齐即可
+        - #表示注释，从这个字符一直到行尾，都会被解析器忽略
+    - 配置服务器相关信息
+        ```
+        server:
+          port: 9000
+          address: 127.0.0.1
+        ```
+    - 数据格式
+        - 对象/Map集合
+            ```
+            user:
+              name: zhangsan
+              age: 18
+              password: 123456
+            ```
+        - 数组/List/Set集合
+            ```
+            hobby:
+              - java
+              - game
+              - sport
+            ```
+- @ConfigurationProperties与@Value
+    - 都是用来注入外部配置的属性的
+    - @Value注解只能一个一个的进行外部属性的注入
+    - @ConfigurationProperties可以批量的将外部的属性配置注入到bean对象的属性中
