@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hao.mapper.CodeforcesMapper">
+    <select id="list" resultType="com.hao.pojo.CfContest">
+        select id, contest_id, contest_name, begin_time, length, create_time, update_time
+        from cf_contest
+        <where>
+            <if test="contestId != null">
+                contest_id like concat('%', #{contestId}, '%')
+            </if>
+            <if test="contestName != null">
+                contest_name like concat('%', #{contestName}, '%')
+            </if>
+            <if test="beginTime">
+                begin_time like concat('%', #{beginTime}, '%')
+            </if>
+        </where>
+        order by begin_time desc
+    </select>
+</mapper>

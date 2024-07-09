@@ -998,3 +998,7 @@ update time：记录当前这条数据最后更新的时间（默认值CURRENT_T
     - 都是用来注入外部配置的属性的
     - @Value注解只能一个一个的进行外部属性的注入
     - @ConfigurationProperties可以批量的将外部的属性配置注入到bean对象的属性中
+### 登录校验
+#### 登陆标记
+- 用户登陆成功之后，每一次请求中，都可以获取到该标记（会话技术）
+- 统一拦截：过滤器Filter（Servlet规范）、拦截器Interceptor（spring提供）

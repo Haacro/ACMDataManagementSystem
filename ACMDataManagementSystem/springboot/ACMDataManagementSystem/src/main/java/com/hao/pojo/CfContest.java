@@ -9,15 +9,12 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Stu {
+public class CfContest {
     private Integer id;
-    private String stuNo;
-    private String password;
-    private String stuName;
-    private String className;
-    private Short gender;
-    private String school;
-    private Integer stuScore;
+    private Integer contestId;
+    private String contestName;
+    private String beginTime;
+    private String length;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 }

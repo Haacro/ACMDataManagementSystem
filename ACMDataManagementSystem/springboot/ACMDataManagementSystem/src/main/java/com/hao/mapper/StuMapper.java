@@ -33,4 +33,7 @@ public interface StuMapper {
     void deleteByIds(List<Integer> ids);
 
     void update(Stu stu);
+
+    @Select("select * from stu where stu_no = #{stuNo} and password = #{password}")
+    Stu getByStuNoAndPassword(Stu stu);
 }

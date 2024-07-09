@@ -65,4 +65,9 @@ public class StuServiceImpl implements StuService {
         stu.setUpdateTime(LocalDateTime.now());
         stuMapper.update(stu);
     }
+
+    @Override
+    public Stu login(Stu stu) {
+        return stuMapper.getByStuNoAndPassword(stu);
+    }
 }

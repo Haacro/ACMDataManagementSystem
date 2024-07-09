@@ -20,4 +20,6 @@ public interface StuService {
     void deleteByIds(List<Integer> ids);
 
     void update(Stu stu);
+
+    Stu login(Stu stu);
 }
