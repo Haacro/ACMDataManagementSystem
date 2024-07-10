@@ -14,7 +14,11 @@
 <script lang="ts" setup>
 import { reactive, onMounted } from 'vue'
 import { VxeGridProps } from 'vxe-table'
-import * as echarts from 'echarts';
+
+
+
+
+
 interface RowVO {
   [key: string]: any
 }
@@ -39,7 +43,7 @@ const gridOptions = reactive<VxeGridProps<RowVO>>({
   formConfig: {
     items: [
       { field: 'name', title: '名称', itemRender: { name: 'VxeInput' } },
-      { field: 'email', title: '�?�?', itemRender: { name: 'VxeInput' } },
+      { field: 'email', title: '�?�?', itemRender: { name: 'VxeInput' } },
       { field: 'nickname', title: '昵称', itemRender: { name: 'VxeInput' } },
       {
         itemRender: {
@@ -55,8 +59,8 @@ const gridOptions = reactive<VxeGridProps<RowVO>>({
   proxyConfig: {
     // 对应响应结果 { result: [], page: { total: 100 } }
     props: {
-      result: 'result', // 配置响应结果列表字�??
-      total: 'page.total' // 配置响应结果总页数字�?
+      result: 'result', // 配置响应结果列表字�??
+      total: 'page.total' // 配置响应结果总页数字�?
     },
     ajax: {
       // 接收 Promise 对象
