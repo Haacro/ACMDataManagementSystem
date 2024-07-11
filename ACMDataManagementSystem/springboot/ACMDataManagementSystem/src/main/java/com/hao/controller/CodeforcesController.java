@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Codeforces接口")
 @Slf4j
+@CrossOrigin(origins = "http://localhost:7000") //允许跨域请求
 @RequestMapping("/codeforces")
 @RestController
 public class CodeforcesController {

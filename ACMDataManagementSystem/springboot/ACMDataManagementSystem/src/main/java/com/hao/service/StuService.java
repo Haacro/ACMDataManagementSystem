@@ -13,7 +13,7 @@ public interface StuService {
     void add(Stu stu);
 
     PageBean page(Integer page, Integer pageSize, String stuNo, String stuName,
-                  String className, Short gender, String school);
+                  String className, Short gender, String school, Integer stuScore);
 
     Stu getById(Integer id);
 

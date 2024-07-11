@@ -24,6 +24,7 @@ import java.util.List;
 
 @Tag(name = "stus接口")
 @Slf4j
+@CrossOrigin(origins = "http://localhost:7000") //允许跨域请求
 @RequestMapping("/stus")
 @RestController
 public class StuController {
@@ -80,10 +81,12 @@ public class StuController {
             @Parameter(description = "Gender", example = "1", schema = @Schema(type = "integer", allowableValues = {"0", "1"}), required = true)
             @RequestParam(required = false) Short gender,
             @Parameter(description = "School name", example = "北京化工大学", required = true)
-            @RequestParam(required = false) String school
+            @RequestParam(required = false) String school,
+            @Parameter(description = "Student score", example = "666", required = true)
+            @RequestParam(required = false) Integer stuScore
             /*, @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate time*/) {
-        log.info("分页查询学生用户，参数:{},{},{},{},{},{},{}", page, pageSize, stuNo, stuName, className, gender, school);
-        PageBean pageBean = stuService.page(page, pageSize, stuNo, stuName, className, gender, school);
+        log.info("分页查询学生用户，参数:{},{},{},{},{},{},{},{}", page, pageSize, stuNo, stuName, className, gender, school, stuScore);
+        PageBean pageBean = stuService.page(page, pageSize, stuNo, stuName, className, gender, school, stuScore);
         return Result.success(pageBean);
     }
 

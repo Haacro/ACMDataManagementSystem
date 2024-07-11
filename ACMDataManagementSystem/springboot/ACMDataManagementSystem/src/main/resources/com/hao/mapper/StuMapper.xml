@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hao.mapper.StuMapper">
     <select id="list" resultType="com.hao.pojo.Stu">
-        select id, stu_no, stu_name, class_name, gender, school, stu_score, create_time, update_time
+        select id, stu_no, password, stu_name, class_name, gender, school, stu_score, create_time, update_time
         from stu
         <where>
             <if test="stuNo != null">
@@ -21,6 +21,9 @@
             </if>
             <if test="school != null">
                 and school like concat('%', #{school}, '%')
+            </if>
+            <if test="stuScore != null">
+                and stu_score like concat('%', #{stuScore}, '%')
             </if>
         </where>
         order by stu_score

@@ -37,12 +37,12 @@ public class StuServiceImpl implements StuService {
 
     @Override
     public PageBean page(Integer page, Integer pageSize, String stuNo, String stuName,
-                         String className, Short gender, String school) {
+                         String className, Short gender, String school, Integer stuScore) {
         //1. 设置分页参数
         PageHelper.startPage(page, pageSize);
 
         //2. 执行查询
-        List<Stu> stuList = stuMapper.list(stuNo, stuName, className, gender, school);
+        List<Stu> stuList = stuMapper.list(stuNo, stuName, className, gender, school, stuScore);
         Page<Stu> p = (Page<Stu>) stuList;
 
         //3. 封装PageBean对象
