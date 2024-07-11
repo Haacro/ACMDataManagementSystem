@@ -1,16 +1,22 @@
 package com.hao.pojo;
 
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Schema(description = "前后端交互统一响应结果实体类Result")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Result {
-    private Integer code;//响应码，1 代表成功; 0 代表失败
-    private String msg;  //响应信息 描述字符串
-    private Object data; //返回的数据
+    @Schema(description = "响应码，1代表成功；0代表失败")
+    private Integer code;
+    @Schema(description = "响应信息 描述字符串", examples = "success")
+    private String msg;
+    @Schema(description = "返回的数据")
+    private Object data;
 
     //增删改 成功响应
     public static Result success() {
