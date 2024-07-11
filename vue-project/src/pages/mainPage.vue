@@ -1,84 +1,131 @@
 <template>
-  <div>
-    <vxe-grid v-bind="gridOptions">
-      <template #top>
-        <div>表格顶部模板</div>
-      </template>
-      <template #bottom>
-        <div>表格底部模板</div>
-      </template>
-    </vxe-grid>
+  <div class="container">
+    <div class="main-content">
+      <div class="controls">
+        <el-select v-model="pageSize" placeholder="每页显示条数" style="width: 200px;">
+          <el-option label="5条/页" :value="5"></el-option>
+          <el-option label="10条/页" :value="10"></el-option>
+          <el-option label="20条/页" :value="20"></el-option>
+          <el-option label="50条/页" :value="50"></el-option>
+        </el-select>
+      </div>
+      <el-table :data="pagedData" border stripe style="width: 100%; margin-top: 20px;">
+        <el-table-column prop="stuNo" label="学号" width="80" />
+        <el-table-column prop="name" label="姓名" width="180" />
+        <el-table-column prop="class" label="班级" width="180" />
+        <el-table-column prop="sex" label="性别" width="100" />
+        <el-table-column prop="school" label="学校" />
+      </el-table>
+      <div class="pagination-container">
+        <el-pagination
+          background
+          layout="prev, pager, next, jumper, ->, total"
+          :total="total"
+          :page-size="pageSize"
+          :current-page="currentPage"
+          @current-change="handleCurrentChange"
+        />
+      </div>
+    </div>
+    <div class="leaderboard">
+      <h3>排行榜</h3>
+      <el-table :data="rankedData" border stripe style="width: 100%">
+        <el-table-column prop="name" label="姓名" width="180" />
+        <el-table-column prop="points" label="积分" width="100" />
+      </el-table>
+    </div>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { reactive, onMounted } from 'vue'
-import { VxeGridProps } from 'vxe-table'
+<script>
+import { ref, computed, onMounted } from 'vue'
+import axios from 'axios'
 
+export default {
+  setup() {
+    const tableData = ref([])
+    const currentPage = ref(1)
+    const pageSize = ref(5)
+    const error = ref(null)
 
+    const total = computed(() => tableData.value.length)
 
+    const pagedData = computed(() => {
+      const start = (currentPage.value - 1) * pageSize.value
+      const end = start + pageSize.value
+      return tableData.value.slice(start, end)
+    })
 
+    const rankedData = computed(() => {
+      return [...tableData.value].sort((a, b) => b.points - a.points).slice(0, 10)
+    })
 
-interface RowVO {
-  [key: string]: any
-}
+    const handleCurrentChange = (val) => {
+      currentPage.value = val
+    }
 
-const gridOptions = reactive<VxeGridProps<RowVO>>({
-  showOverflow: true,
-  border: true,
-  height: 548,
-  rowConfig: {
-    keyField: 'id'
-  },
-  columnConfig: {
-    resizable: true
-  },
-  pagerConfig: {
-    enabled: true
-  },
-  toolbarConfig: {
-    custom: true
-  },
-  layouts: ['Top', 'Form', 'Toolbar', 'Pager', 'Table', 'Bottom'],
-  formConfig: {
-    items: [
-      { field: 'name', title: '名称', itemRender: { name: 'VxeInput' } },
-      { field: 'email', title: '�?�?', itemRender: { name: 'VxeInput' } },
-      { field: 'nickname', title: '昵称', itemRender: { name: 'VxeInput' } },
-      {
-        itemRender: {
-          name: 'VxeButtonGroup',
-          options: [
-            { type: 'submit', content: '搜索', status: 'primary' },
-            { type: 'reset', content: '重置' }
-          ]
-        }
-      }
-    ]
-  },
-  proxyConfig: {
-    // 对应响应结果 { result: [], page: { total: 100 } }
-    props: {
-      result: 'result', // 配置响应结果列表字�??
-      total: 'page.total' // 配置响应结果总页数字�?
-    },
-    ajax: {
-      // 接收 Promise 对象
-      query: ({ page }) => {
-        return fetch(`https://api.vxetable.cn/demo/api/pub/page/list/${page.pageSize}/${page.currentPage}`).then(response => response.json())
+    const fetchTableData = async () => {
+      try {
+        const response = await axios.get('/api')
+        tableData.value = response.data
+        console.log(response.data)
+      } catch (err) {
+        error.value = 'Error fetching data: ' + (err.response ? err.response.data : err.message)
+        console.error('Error fetching data:', err)
       }
     }
-  },
-  columns: [
-    { type: 'seq', width: 70, fixed: 'left' },
-    { field: 'name', title: 'Name', minWidth: 160 },
-    { field: 'email', title: 'Email', minWidth: 160 },
-    { field: 'nickname', title: 'Nickname', minWidth: 160 },
-    { field: 'age', title: 'Age', width: 100 },
-    { field: 'role', title: 'Role', minWidth: 160 },
-    { field: 'amount', title: 'Amount', width: 140 },
-    { field: 'updateDate', title: 'Update Date', visible: false },
-    { field: 'createDate', title: 'Create Date', visible: false }
-  ]
-})
+
+    onMounted(() => {
+      fetchTableData()
+    })
+
+    return {
+      tableData,
+      currentPage,
+      pageSize,
+      total,
+      pagedData,
+      rankedData,
+      handleCurrentChange,
+      fetchTableData,
+      error
+    }
+  }
+}
 </script>
+
+<style scoped>
+.container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+.main-content {
+  flex: 3;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.leaderboard {
+  flex: 1;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.pagination-container {
+  text-align: right;
+  margin-top: 20px;
+}
+h3 {
+  margin-bottom: 20px;
+}
+</style>

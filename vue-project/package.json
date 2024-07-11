@@ -15,8 +15,10 @@
     "echarts": "^5.5.1",
     "element-plus": "^2.7.6",
     "vue": "^3.4.29",
+    "vue-echarts": "^6.7.3",
     "vue-router": "^4.4.0",
-    "vxe-table": "^4.7.45"
+    "vxe-table": "^4.7.46",
+    "xe-utils": "^3.5.28"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",
@@ -26,6 +28,8 @@
     "less": "^4.2.0",
     "npm-run-all2": "^6.2.0",
     "typescript": "~5.4.0",
+    "unplugin-auto-import": "^0.17.6",
+    "unplugin-vue-components": "^0.27.2",
     "vite": "^5.3.1",
     "vite-plugin-vue-setup-extend": "^0.4.0",
     "vue-tsc": "^2.0.21"
