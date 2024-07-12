@@ -16,16 +16,16 @@ class GetCfPipeline:
         problem_name = item["problem_name"]
         problem_rate = item["rating"]
         url = item["url"]
-        tags = ','.join(item["tags"])  # Assuming tags is a list of strings
+        tags = ','.join(item["tags"])
 
         data = (contest_id, problem_id, problem_name, problem_rate, url, tags)
 
         try:
             self.cursor.execute(sql, data)
             self.conn.commit()
-            print("数据成功存储到数据库中！！！")
+            print("数据成功存储到数据库中！！！")#每爬取一个数据输出一次成功
         except pymysql.Error as e:
-            print(f"存储数据时发生错误：{e}")
+            print(f"存储数据时发生错误：{e}")#如有错误发生，提示出错误信息
             self.conn.rollback()
 
         return item

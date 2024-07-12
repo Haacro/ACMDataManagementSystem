@@ -8,8 +8,8 @@ class GetdataCfSpider(scrapy.Spider):
     name = "getdata_cf"
     allowed_domains = ["codeforces.com"]
     start_urls = [f"https://codeforces.com/contests/page/{num}" for num in range(2, 20)]
-
-    def parse(self, response):
+    #一级页面，比赛页
+    def parse(self, response):#一级页面
         text = response.text
 
 
@@ -29,8 +29,9 @@ class GetdataCfSpider(scrapy.Spider):
                 full_url = 'https://codeforces.com' + url_one
                 #print(full_url)
 
-                yield Request(url=full_url, callback=self.parse_two)
+                yield Request(url=full_url, callback=self.parse_two)#
 
+    #二级页面，比赛题目页
     def parse_two(self, response):
         text = response.text
         contest_id = re.findall('/contest/(.*?)/problem', text)
@@ -54,7 +55,7 @@ class GetdataCfSpider(scrapy.Spider):
                 }
                 yield Request(url=full_url_two, callback=self.parse_three, meta={"cf_info": cf_info})
 
-
+    #三级页面，题目详细页
     def parse_three(self,response):
         text = response.text
         cf_info = response.meta['cf_info']
