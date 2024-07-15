@@ -8,6 +8,7 @@ import VxeUI from 'vxe-pc-ui'
 import 'vxe-pc-ui/lib/style.css'
 import ECharts from 'vue-echarts'
 import 'echarts'
+import 'element-plus/dist/index.css'
 const app = createApp(App)
 
 app.component('v-chart', ECharts)

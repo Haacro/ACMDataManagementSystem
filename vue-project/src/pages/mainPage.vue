@@ -11,10 +11,12 @@
       </div>
       <el-table :data="pagedData" border stripe style="width: 100%; margin-top: 20px;">
         <el-table-column prop="stuNo" label="学号" width="80" />
-        <el-table-column prop="name" label="姓名" width="180" />
-        <el-table-column prop="class" label="班级" width="180" />
-        <el-table-column prop="sex" label="性别" width="100" />
+        <el-table-column prop="stuName" label="姓名" width="180" />
+        <el-table-column prop="className" label="班级" width="180" />
+        <el-table-column prop="gender" label="性别" width="100" />
         <el-table-column prop="school" label="学校" />
+        <el-table-column prop="stuScore" label="积分" />
+        
       </el-table>
       <div class="pagination-container">
         <el-pagination
@@ -29,69 +31,56 @@
     </div>
     <div class="leaderboard">
       <h3>排行榜</h3>
-      <el-table :data="rankedData" border stripe style="width: 100%">
-        <el-table-column prop="name" label="姓名" width="180" />
-        <el-table-column prop="points" label="积分" width="100" />
+      <el-table :data="tableData" border stripe style="width: 100%">
+        <el-table-column prop="stuName" label="姓名" width="180" />
+        <el-table-column prop="stuScore" label="积分" width="100" />
       </el-table>
     </div>
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 
-export default {
-  setup() {
-    const tableData = ref([])
-    const currentPage = ref(1)
-    const pageSize = ref(5)
-    const error = ref(null)
+const tableData = ref([])
+const currentPage = ref(1)
+const pageSize = ref(5)
+const error = ref(null)
 
-    const total = computed(() => tableData.value.length)
+const total = ref(0)
 
-    const pagedData = computed(() => {
-      const start = (currentPage.value - 1) * pageSize.value
-      const end = start + pageSize.value
-      return tableData.value.slice(start, end)
-    })
+const pagedData = computed(() => {
+  const start = (currentPage.value - 1) * pageSize.value
+  const end = start + pageSize.value
+  return tableData.value.slice(start, end)
+})
 
-    const rankedData = computed(() => {
-      return [...tableData.value].sort((a, b) => b.points - a.points).slice(0, 10)
-    })
 
-    const handleCurrentChange = (val) => {
-      currentPage.value = val
+
+const handleCurrentChange = (val) => {
+  currentPage.value = val
+}
+
+const fetchTableData = async () => {
+  try {
+    const response = await axios.get('/api/stus')
+    if (response.data && response.data.data && Array.isArray(response.data.data.rows)) {
+      tableData.value = response.data.data.rows
+      total.value = response.data.data.total
+    } else {
+      console.error('Unexpected response structure:', response.data)
     }
-
-    const fetchTableData = async () => {
-      try {
-        const response = await axios.get('/api')
-        tableData.value = response.data
-        console.log(response.data)
-      } catch (err) {
-        error.value = 'Error fetching data: ' + (err.response ? err.response.data : err.message)
-        console.error('Error fetching data:', err)
-      }
-    }
-
-    onMounted(() => {
-      fetchTableData()
-    })
-
-    return {
-      tableData,
-      currentPage,
-      pageSize,
-      total,
-      pagedData,
-      rankedData,
-      handleCurrentChange,
-      fetchTableData,
-      error
-    }
+  } catch (err) {
+    error.value = 'Error fetching data: ' + (err.response ? err.response.data : err.message)
+    console.error('Error fetching data:', err)
   }
 }
+
+onMounted(() => {
+  fetchTableData()
+})
+
 </script>
 
 <style scoped>
