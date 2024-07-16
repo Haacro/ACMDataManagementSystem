@@ -2,12 +2,24 @@
   <div class="container">
     <div class="table-container">
       <h2>比赛列表</h2>
-      <el-select v-model="pageSize" placeholder="page number" style="width: 200px;" @change="handlePageSizeChange">
-        <el-option label="5" :value="5"></el-option>
-        <el-option label="10" :value="10"></el-option>
-        <el-option label="20" :value="20"></el-option>
-        <el-option label="50" :value="50"></el-option>
-      </el-select>
+      <div class="search-pagination-container">
+        <el-select v-model="pageSize" placeholder="page number" style="width: 200px;" @change="handlePageSizeChange">
+          <el-option label="5" :value="5"></el-option>
+          <el-option label="10" :value="10"></el-option>
+          <el-option label="20" :value="20"></el-option>
+          <el-option label="50" :value="50"></el-option>
+        </el-select>
+        <div class="search-container">
+          <el-input
+            v-model="searchQuery"
+            placeholder="请输入比赛名称"
+            class="search-input"
+            clearable
+          />
+          <el-button type="primary" @click="handleSearch">搜索</el-button>
+        </div>
+      
+      </div>
       <el-table :data="tableData" border stripe style="width: 100%; margin-top: 20px;">
         <el-table-column prop="contestId" label="id" width="auto" />
         <el-table-column prop="contestName" label="contest name" width="auto">
@@ -23,7 +35,7 @@
               Detail
             </el-button>
           </template>
-        </el-table-column>
+        </el-table-column>  
       </el-table>
       <div class="pagination-container">
         <el-pagination
@@ -39,7 +51,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
@@ -50,13 +61,15 @@ export default {
     const currentPage = ref(1)
     const pageSize = ref(10)
     const total = ref(0)
+    const searchQuery = ref('')
 
     const fetchTableData = async () => {
       try {
         const response = await axios.get('/api/codeforces/contests', {
           params: {
             page: currentPage.value,
-            pageSize: pageSize.value
+            pageSize: pageSize.value,
+            contestName: searchQuery.value // Include search query in the request
           }
         })
         tableData.value = response.data.data.rows
@@ -75,6 +88,11 @@ export default {
       currentPage.value = 1 // reset to the first page whenever page size changes
     }
 
+    const handleSearch = () => {
+      currentPage.value = 1 // reset to the first page on new search
+      fetchTableData()
+    }
+
     const navigateToContest = (contestId) => {
       const url = `https://codeforces.com/contest/${contestId}`
       window.open(url, '_blank')
@@ -91,14 +109,15 @@ export default {
       currentPage,
       pageSize,
       total,
+      searchQuery,
       handleCurrentChange,
       handlePageSizeChange,
+      handleSearch,
       navigateToContest
     }
   }
 }
 </script>
-
 <style scoped>
 .container {
   display: flex;
@@ -125,9 +144,28 @@ h2 {
   color: #333;
 }
 
+.search-pagination-container {
+  display: flex;
+  
+  /* justify-content: space-between; */
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-container {
+  display: flex;
+  padding: 20px;
+  align-items: center;
+}
+
+.search-input {
+  width: 300px;
+  margin-right: 10px;
+}
+
 .pagination-container {
   margin-top: 20px;
   display: flex;
   justify-content: center;
 }
-</style>
+</style>  

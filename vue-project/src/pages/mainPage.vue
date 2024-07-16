@@ -32,8 +32,8 @@
     <div class="leaderboard">
       <h3>排行榜</h3>
       <el-table :data="tableData" border stripe style="width: 100%">
-        <el-table-column prop="stuName" label="姓名" width="180" />
-        <el-table-column prop="stuScore" label="积分" width="100" />
+        <el-table-column prop="stuName" label="姓名" width="auto" />
+        <el-table-column prop="stuScore" label="积分" width="auto" />
       </el-table>
     </div>
   </div>

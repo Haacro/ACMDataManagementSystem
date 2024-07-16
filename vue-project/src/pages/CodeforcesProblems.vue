@@ -18,6 +18,13 @@
             <el-button link type="primary" size="small" @click="navigateToProblem(scope.row.url)">
               Detail
             </el-button>
+            <el-button
+              :type="scope.row.submitted ? 'info' : 'success'"
+              size="small"
+              @click="handleSubmit(scope.row)"
+            >
+              {{ scope.row.submitted ? '已完成' : '未完成' }}
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -35,7 +42,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
@@ -57,7 +63,10 @@ export default {
             pageSize: pageSize.value
           }
         })
-        tableData.value = response.data.data.rows
+        tableData.value = response.data.data.rows.map(row => ({
+          ...row,
+          submitted: false
+        }))
         total.value = response.data.data.total
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -77,6 +86,31 @@ export default {
       window.open(url, '_blank')
     }
 
+    const handleSubmit = async (row) => {
+      try {
+        if (!row.submitted) {
+          // 提交数据到后端
+          const response = await axios.post('/api/submit', {
+            problemId: row.problemId,
+            score: row.problemRate // 假设使用 problemRate 作为分数
+          })
+      
+            row.submitted = true
+          
+        } else {
+          // 取消提交数据到后端
+          const response = await axios.post('/api/cancelSubmit', {
+            problemId: row.problemId
+          })
+        
+            row.submitted = false
+          
+        }
+      } catch (error) {
+        console.error('Error submitting or cancelling data:', error)
+      }
+    }
+
     watch([currentPage, pageSize], fetchTableData)
 
     onMounted(() => {
@@ -90,7 +124,8 @@ export default {
       total,
       handleCurrentChange,
       handlePageSizeChange,
-      navigateToProblem
+      navigateToProblem,
+      handleSubmit
     }
   }
 }

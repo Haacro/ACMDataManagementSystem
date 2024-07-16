@@ -19,28 +19,41 @@
         <el-menu-item index="4-2" @click="navigate('/atcoder-problems')">题目列表</el-menu-item>
       </el-sub-menu>
       <el-menu-item index="5" @click="navigate('/smart-training')">智能训练</el-menu-item>
-      <el-menu-item index="6">
-        <a href="/login" target="_blank">登录</a>
+      <el-menu-item v-if="!authStore.isAuthenticated" index="6">
+        <a href="/login">登录</a>
       </el-menu-item>
+      <el-sub-menu v-if="authStore.isAuthenticated" index="7">
+        <template #title>登陆状态</template>
+        <el-menu-item index="7-1" @click="navigate('/profile')">个人</el-menu-item>
+        <el-menu-item index="7-2" @click="logout">退出登录</el-menu-item>
+      </el-sub-menu>
     </el-menu>
     <router-view></router-view>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
+import { useAuthStore } from './store';
+import { ref } from 'vue';
 
-const activeIndex = ref('1')
-const router = useRouter()
+const activeIndex = ref('1');
+const router = useRouter();
+const authStore = useAuthStore(); // 使用 Pinia 的 store
 
 const handleSelect = (key: string) => {
-  console.log('Selected key:', key)
-}
+  console.log('Selected key:', key);
+};
 
 const navigate = (path: string) => {
-  router.push(path)
-}
+  router.push(path);
+};
+
+const logout = () => {
+  authStore.logout();
+  // 如果需要刷新页面来反映未登录状态，可以调用以下方法
+  // location.reload();
+};
 </script>
 
 <style scoped>

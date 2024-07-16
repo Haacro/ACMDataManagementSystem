@@ -1,18 +1,18 @@
 <template>
   <div class="profile">
-    <h1>个人数据概览</h1>
+    <h1>??</h1>
     <div class="summary">
       <div class="summary-item">
-        <h2>本周做题情况</h2>
+        <h2>�??周做题情�??</h2>
         <bar-chart :options="barChartOptionsThisWeek"></bar-chart>
       </div>
       <div class="summary-item">
-        <h2>上周做题情况</h2>
+        <h2>上周做�?�情�??</h2>
         <bar-chart :options="barChartOptionsLastWeek"></bar-chart>
       </div>
       <div class="summary-item stats">
-        <p>本周做题总数：<strong>{{ totalThisWeek }}</strong></p>
-        <p>比上周<strong>{{ comparisonText }}</strong>了<strong>{{ diff }}</strong>题。</p>
+        <p>�??周做题总数�??<strong>{{ totalThisWeek }}</strong></p>
+        <p>比上�??<strong>{{ comparisonText }}</strong>�??<strong>{{ diff }}</strong>题�?</p>
       </div>
     </div>
     <div class="charts">
@@ -21,7 +21,7 @@
         <line-chart :options="lineChartOptions"></line-chart>
       </div>
       <div class="chart-item">
-        <h2>做题类型分布</h2>
+        <h2>做�?�类型分�??</h2>
         <pie-chart :options="pieChartOptions"></pie-chart>
       </div>
     </div>
@@ -77,7 +77,7 @@ export default {
       lineChartOptions: {
         xAxis: {
           type: 'category',
-          data: ['第一次', '第二次', '第三次', '第四次', '第五次']
+          data: ['�??一�??', '�??二�??', '�??三�??', '�??四�??', '�??五�??']
         },
         yAxis: {
           type: 'value'
@@ -92,14 +92,14 @@ export default {
       pieChartOptions: {
         series: [
           {
-            name: '做题类型',
+            name: '做�?�类�??',
             type: 'pie',
             radius: '50%',
             data: [
-              { value: 40, name: '选择题' },
-              { value: 30, name: '填空题' },
-              { value: 20, name: '判断题' },
-              { value: 10, name: '简答题' }
+              { value: 40, name: '选择�??' },
+              { value: 30, name: '�??空�??' },
+              { value: 20, name: '判断�??' },
+              { value: 10, name: '简答�??' }
             ]
           }
         ]
