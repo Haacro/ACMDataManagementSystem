@@ -2,6 +2,8 @@ package com.hao.mapper;
 
 import com.hao.pojo.CfContest;
 import com.hao.pojo.CfProblem;
+import com.hao.pojo.Stu;
+import com.hao.pojo.UpdateScore;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -17,4 +19,6 @@ public interface CodeforcesMapper {
 
     List<CfProblem> problemList(Integer contestId, String problemId,
                                 String problemName, String problemRate, String tag);
+
+    void update(UpdateScore updateScore);
 }

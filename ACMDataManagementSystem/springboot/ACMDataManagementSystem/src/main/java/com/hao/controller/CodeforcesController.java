@@ -3,6 +3,7 @@ package com.hao.controller;
 import com.hao.pojo.CfProblem;
 import com.hao.pojo.PageBean;
 import com.hao.pojo.Result;
+import com.hao.pojo.UpdateScore;
 import com.hao.service.CodeforcesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -86,8 +87,22 @@ public class CodeforcesController {
             @RequestParam(required = false) String problemRate,
             @Parameter(description = "Problem tag", example = "greedy", required = false)
             @RequestParam(required = false) String tag) {
-        log.info("分页查询cf题目，参数:{},{},{},{},{}", contestId, problemId, problemName, problemRate, tag);
+        log.info("条件分页查询cf题目，参数:{},{},{},{},{}", contestId, problemId, problemName, problemRate, tag);
         PageBean pageBean = codeforcesService.problemPage(page, pageSize, contestId, problemId, problemName, problemRate, tag);
         return Result.success(pageBean);
+    }
+
+    @Operation(summary = "Update the score", description = "更新积分")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully updated student", content = @Content(mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "Invalid input")
+    })
+    @PutMapping("/problems")
+    public Result update(
+            @Parameter(description = "Student object to be updated", required = true)
+            @RequestBody UpdateScore updateScore) {
+        log.info("更新用户积分:{}", updateScore);
+        codeforcesService.update(updateScore);
+        return Result.success();
     }
 }

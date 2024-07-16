@@ -26,7 +26,7 @@
                 and stu_score like concat('%', #{stuScore}, '%')
             </if>
         </where>
-        order by stu_score
+        order by stu_score desc
     </select>
 
     <delete id="deleteByIds">

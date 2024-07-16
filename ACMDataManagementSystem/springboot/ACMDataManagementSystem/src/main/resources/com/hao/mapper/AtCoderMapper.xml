@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hao.mapper.CodeforcesMapper">
-    <select id="contestList" resultType="com.hao.pojo.CfContest">
-        select id, contest_id, contest_name, begin_time, length, create_time, update_time
-        from cf_contest
+<mapper namespace="com.hao.mapper.AtCoderMapper">
+    <select id="contestList" resultType="com.hao.pojo.AcContest">
+        select id, contest_id, contest_name, begin_time, length, url, create_time, update_time
+        from ac_contest
         <where>
             <if test="contestId != null">
                 contest_id like concat('%', #{contestId}, '%')
@@ -19,14 +19,10 @@
         </where>
         order by begin_time desc
     </select>
-
-    <select id="problemList" resultType="com.hao.pojo.CfProblem">
-        select id, contest_id, problem_id, problem_name, problem_rate, tag, url, create_time, update_time
-        from cf_problem
+    <select id="problemList" resultType="com.hao.pojo.AcProblem">
+        select id, problem_id, problem_name, problem_rate, url, create_time, update_time
+        from ac_problem
         <where>
-            <if test="contestId != null">
-                contest_id like concat('%', #{contestId}, '%')
-            </if>
             <if test="problemId != null">
                 problem_id like concat('%', #{problemId}, '%')
             </if>
@@ -36,20 +32,7 @@
             <if test="problemRate != null">
                 problem_rate like concat('%', #{problemRate}, '%')
             </if>
-            <if test="tag != null">
-                tag like concat('%', #{tag}, '%')
-            </if>
         </where>
-        order by contest_id desc
+        order by problem_id
     </select>
-
-    <update id="update">
-        update stu
-        set stu_score   = case
-                              when #{problemRate} > stu_score THEN (#{problemRate} + stu_score) / 2
-                              else stu_score + #{problemRate} / 10
-            end,
-            update_time = now()
-        where id = #{stuId};
-    </update>
 </mapper>
