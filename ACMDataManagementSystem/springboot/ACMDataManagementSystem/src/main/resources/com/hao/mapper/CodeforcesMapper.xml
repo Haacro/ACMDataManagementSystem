@@ -50,6 +50,6 @@
                               else stu_score + #{problemRate} / 10
             end,
             update_time = now()
-        where id = #{stuId};
+        where stu_no = #{stuId};
     </update>
 </mapper>

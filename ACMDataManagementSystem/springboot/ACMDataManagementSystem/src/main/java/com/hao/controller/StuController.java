@@ -24,7 +24,7 @@ import java.util.List;
 
 @Tag(name = "stus接口")
 @Slf4j
-@CrossOrigin(origins = "http://localhost:7000") //允许跨域请求
+@CrossOrigin(origins = {"http://localhost:5174", "http://localhost:7000"}) //允许跨域请求
 @RequestMapping("/stus")
 @RestController
 public class StuController {
@@ -71,7 +71,7 @@ public class StuController {
             @Parameter(description = "Page number", example = "1", required = false)
             @RequestParam(defaultValue = "1") Integer page,
             @Parameter(description = "Page size", example = "10", required = false)
-            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "100") Integer pageSize,
             @Parameter(description = "Student number", example = "2021040250", required = true)
             @RequestParam(required = false) String stuNo,
             @Parameter(description = "Student name", example = "郝佳宁", required = true)

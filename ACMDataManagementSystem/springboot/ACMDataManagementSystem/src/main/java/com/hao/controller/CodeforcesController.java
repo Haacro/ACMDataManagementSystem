@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Codeforces接口")
 @Slf4j
-@CrossOrigin(origins = "http://localhost:7000") //允许跨域请求
+@CrossOrigin(origins = {"http://localhost:5174", "http://localhost:7000"}) //允许跨域请求
 @RequestMapping("/codeforces")
 @RestController
 public class CodeforcesController {
@@ -97,7 +97,7 @@ public class CodeforcesController {
             @ApiResponse(responseCode = "200", description = "Successfully updated student", content = @Content(mediaType = "application/json")),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PutMapping("/problems")
+    @PostMapping("/problems")
     public Result update(
             @Parameter(description = "Student object to be updated", required = true)
             @RequestBody UpdateScore updateScore) {

@@ -14,7 +14,7 @@ public class Knife4jConfig {
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                 .group("springshop-public")
-                .pathsToMatch("/stus/**", "/codeforces/**")
+                .pathsToMatch("/stus/**", "/codeforces/**", "/login/**")
                 .build();
     }
 

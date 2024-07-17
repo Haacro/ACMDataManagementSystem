@@ -1,7 +1,11 @@
 package com.hao.service;
 
+import com.hao.pojo.SubNum;
+
 import java.util.List;
 
 public interface DataService {
-    List<Integer> getScore(Integer id);
+    List<String> getScore(String stuNo);
+
+    List<SubNum> getSub();
 }

@@ -17,8 +17,8 @@ public interface StuMapper {
     /*@Delete("delete from stu where id = #{id}")
     void deleteById(Integer id);*/
 
-    @Insert("insert into stu(stu_no, stu_name, class_name, gender, school, stu_score, create_time, update_time)" +
-            "values(#{stuNo},#{stuName},#{className},#{gender},#{school},#{stuScore},#{createTime},#{updateTime})")
+    @Insert("insert into stu(stu_no, stu_name, class_name, gender, school, create_time, update_time)" +
+            "values(#{stuNo},#{stuName},#{className},#{gender},#{school},#{createTime},#{updateTime})")
     void insert(Stu stu);
 
     /*PageHelper分页查询*/
