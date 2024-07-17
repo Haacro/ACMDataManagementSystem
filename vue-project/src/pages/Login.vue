@@ -22,7 +22,7 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/store'; // 确保路径正确
-
+// import * as jwt_decode from 'jwt-decode';
 export default {
   name: 'LoginComponent',
   setup() {
@@ -32,21 +32,27 @@ export default {
     });
     const router = useRouter();
     const authStore = useAuthStore(); // 使用 Pinia store
-
     const handleLogin = () => {
       axios.post('/api/login', loginForm.value)
         .then(response => {
           if (response.data.code === 1) {
             alert('登录成功');
             localStorage.setItem('token', response.data.data);
-            authStore.login(); // 更新登录状态
+            const stuNo_ = loginForm.value.stuNo;
+            // const stuNo = jwt_decode(response.data.data).stuNo;
+            // localStorage.setItem('stuNo', stuNo);
+            // const token = response.data.data;  
+            // const decodedToken = jwt_decode(token);
+           
+            
+            authStore.login(stuNo_); // 更新登录状态
             router.push({ path: '/' });
           } else {
-            alert(response.data.msg || '登录失败');
+            // alert(response.data.msg || '登录失败');
           }
         })
         .catch(error => {
-          alert(error.response.data.msg || '请求失败');
+          // alert(error.response.data.msg || '请求失败');
         });
     };
 

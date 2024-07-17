@@ -65,6 +65,7 @@ const handleCurrentChange = (val) => {
 const fetchTableData = async () => {
   try {
     const response = await axios.get('/api/stus')
+    console.log(response.data.data.rows)
     if (response.data && response.data.data && Array.isArray(response.data.data.rows)) {
       tableData.value = response.data.data.rows
       total.value = response.data.data.total

@@ -2,12 +2,31 @@
   <div class="container">
     <div class="table-container">
       <h2>Problem List</h2>
-      <el-select v-model="pageSize" placeholder="page number" style="width: 200px;" @change="handlePageSizeChange">
-        <el-option label="5" :value="5"></el-option>
-        <el-option label="10" :value="10"></el-option>
-        <el-option label="20" :value="20"></el-option>
-        <el-option label="50" :value="50"></el-option>
-      </el-select>
+      <div class="control-container">
+        <el-select v-model="pageSize" placeholder="每页数量" style="width: 200px;" @change="handlePageSizeChange">
+          <el-option label="5" :value="5"></el-option>
+          <el-option label="10" :value="10"></el-option>
+          <el-option label="20" :value="20"></el-option>
+          <el-option label="50" :value="50"></el-option>
+        </el-select>
+        <div class="search-container">
+          <el-input
+            v-model="nameQuery"
+            placeholder="请输入题目名称"
+            class="search-input"
+            clearable
+            @clear="handleSearch"
+          />
+          <el-input
+            v-model="tagQuery"
+            placeholder="请输入标签"
+            class="search-input"
+            clearable
+            @clear="handleSearch"
+          />
+          <el-button type="primary" @click="handleSearch">搜索</el-button>
+        </div>
+      </div>
       <el-table :data="tableData" border stripe style="width: 100%; margin-top: 20px;">
         <el-table-column prop="problemId" label="ID" width="auto" />
         <el-table-column prop="problemName" label="Problem Name" width="auto" />
@@ -18,12 +37,8 @@
             <el-button link type="primary" size="small" @click="navigateToProblem(scope.row.url)">
               Detail
             </el-button>
-            <el-button
-              :type="scope.row.submitted ? 'info' : 'success'"
-              size="small"
-              @click="handleSubmit(scope.row)"
-            >
-              {{ scope.row.submitted ? '已完成' : '未完成' }}
+            <el-button type="success" size="small" @click="handleSubmit(scope.row)">
+              提交
             </el-button>
           </template>
         </el-table-column>
@@ -42,25 +57,31 @@
     </div>
   </div>
 </template>
+
 <script>
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/store';
 
 export default {
   setup() {
+    const authStore = useAuthStore();
     const tableData = ref([])
     const currentPage = ref(1)
     const pageSize = ref(10)
     const total = ref(0)
-    const router = useRouter()
-
+    const nameQuery = ref('')
+    const tagQuery = ref('')
+    const stuNo = authStore.stuNo;
+    console.log(stuNo + "sss")
     const fetchTableData = async () => {
       try {
         const response = await axios.get('/api/codeforces/problems', {
           params: {
             page: currentPage.value,
-            pageSize: pageSize.value
+            pageSize: pageSize.value,
+            problemName: nameQuery.value || undefined,
+            tag: tagQuery.value || undefined
           }
         })
         tableData.value = response.data.data.rows.map(row => ({
@@ -82,32 +103,28 @@ export default {
       currentPage.value = 1 // reset to the first page whenever page size changes
     }
 
+    const handleSearch = () => {
+      currentPage.value = 1 // reset to the first page on new search
+      fetchTableData()
+    }
+
     const navigateToProblem = (url) => {
       window.open(url, '_blank')
     }
-
     const handleSubmit = async (row) => {
-      try {
-        if (!row.submitted) {
-          // 提交数据到后端
-          const response = await axios.post('/api/submit', {
-            problemId: row.problemId,
-            score: row.problemRate // 假设使用 problemRate 作为分数
-          })
       
-            row.submitted = true
-          
-        } else {
-          // 取消提交数据到后端
-          const response = await axios.post('/api/cancelSubmit', {
-            problemId: row.problemId
-          })
+      try {
+         axios.post('/api/codeforces/problems', {
+
+          stuId: stuNo,
+          problemRate: row.problemRate // 假设使用 problemRate 作为分数
+        })
         
-            row.submitted = false
-          
-        }
+        ElMessage.success('提交成功')
+        row.submitted = true
       } catch (error) {
-        console.error('Error submitting or cancelling data:', error)
+        console.error('Error submitting data:', error)
+        ElMessage.error('提交失败')
       }
     }
 
@@ -122,8 +139,11 @@ export default {
       currentPage,
       pageSize,
       total,
+      nameQuery,
+      tagQuery,
       handleCurrentChange,
       handlePageSizeChange,
+      handleSearch,
       navigateToProblem,
       handleSubmit
     }
@@ -155,6 +175,27 @@ h2 {
   text-align: center;
   margin-bottom: 20px;
   color: #333;
+}
+
+.control-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.page-size-select {
+  margin-right: 20px; /* 添加右边距 */
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 200px;
+  margin-left: 10px;
 }
 
 .pagination-container {

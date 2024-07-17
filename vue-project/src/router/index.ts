@@ -9,6 +9,7 @@ import AtcoderProblems from '@/pages/AtcoderProblems.vue'
 import trainPage from '@/pages/trainPage.vue'
 import Login from '@/pages/Login.vue'
 import profilePage from '@/pages/profilePage.vue'
+import register from '@/pages/register.vue'
 
 
 
@@ -21,7 +22,8 @@ const routes = [
   { path: '/atcoder-problems', component: AtcoderProblems },
   { path: '/smart-training', component: trainPage, meta: { requiresAuth: true } },
   { path: '/login', component: Login },
-  { path: '/profile', component: profilePage }
+  { path: '/profile', component: profilePage },
+  {path : '/register', component : register}
 ]
 
 const router = createRouter({
