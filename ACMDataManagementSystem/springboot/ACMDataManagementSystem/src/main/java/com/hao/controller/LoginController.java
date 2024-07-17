@@ -5,7 +5,7 @@ import com.hao.pojo.Stu;
 import com.hao.service.StuService;
 import com.hao.utils.JwtUtils;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,14 +28,13 @@ public class LoginController {
     @Autowired
     private StuService stuService;
 
-    @Operation(summary = "Add a new student", description = "新增学生用户")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Successfully added student",
-                    content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "400", description = "Invalid input")
+    @Operation(summary = "学生用户登录", description = "学生用户通过账号密码进行登录，成功则生成JWT令牌")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "登录成功，返回JWT令牌"),
+            @ApiResponse(responseCode = "401", description = "用户名或密码错误")
     })
     @PostMapping("/login")
-    public Result login(@RequestBody Stu stu) {
+    public Result login(@RequestBody @Parameter(description = "学生登录信息") Stu stu) {
         log.info("学生用户登录:{}", stu);
         Stu s = stuService.login(stu);
 

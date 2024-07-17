@@ -7,29 +7,38 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Schema(description = "学生用户信息实体类Stu")
+@Schema(description = "学生实体类")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Stu {
-    @Schema(description = "主键ID", example = "1")
+    @Schema(description = "主键ID")
     private Integer id;
-    @Schema(description = "学号", example = "2021040250")
+
+    @Schema(description = "学生编号")
     private String stuNo;
-    @Schema(description = "密码", example = "123456")
+
+    @Schema(description = "学生密码")
     private String password;
-    @Schema(description = "姓名", example = "郝佳宁")
+
+    @Schema(description = "学生姓名")
     private String stuName;
-    @Schema(description = "班级", example = "计科2102")
+
+    @Schema(description = "班级名称")
     private String className;
-    @Schema(description = "性别（1：男性，2：女性）", example = "1", allowableValues = {"0", "1"})
+
+    @Schema(description = "性别")
     private Short gender;
-    @Schema(description = "学校", example = "北京化工大学")
+
+    @Schema(description = "学校")
     private String school;
-    @Schema(description = "积分", example = "500")
+
+    @Schema(description = "学生成绩")
     private Integer stuScore;
-    @Schema(description = "创建时间", example = "2024-07-10 09:12:01")
+
+    @Schema(description = "创建时间")
     private LocalDateTime createTime;
-    @Schema(description = "修改时间", example = "2024-07-10 09:12:01")
+
+    @Schema(description = "更新时间")
     private LocalDateTime updateTime;
 }

@@ -1,6 +1,6 @@
 server:
   port: 8080
-  address: 172.20.10.2
+#  address: 172.20.10.2
 
 spring:
   #数据库连接信息
