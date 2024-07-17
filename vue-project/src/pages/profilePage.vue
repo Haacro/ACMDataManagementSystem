@@ -1,119 +1,86 @@
 <template>
   <div class="profile">
-    <h1>??</h1>
+    <h1>分数变化</h1>
     <div class="summary">
       <div class="summary-item">
-        <h2>�??周做题情�??</h2>
-        <bar-chart :options="barChartOptionsThisWeek"></bar-chart>
-      </div>
-      <div class="summary-item">
-        <h2>上周做�?�情�??</h2>
-        <bar-chart :options="barChartOptionsLastWeek"></bar-chart>
-      </div>
-      <div class="summary-item stats">
-        <p>�??周做题总数�??<strong>{{ totalThisWeek }}</strong></p>
-        <p>比上�??<strong>{{ comparisonText }}</strong>�??<strong>{{ diff }}</strong>题�?</p>
-      </div>
-    </div>
-    <div class="charts">
-      <div class="chart-item">
-        <h2>分数变化情况</h2>
-        <line-chart :options="lineChartOptions"></line-chart>
-      </div>
-      <div class="chart-item">
-        <h2>做�?�类型分�??</h2>
-        <pie-chart :options="pieChartOptions"></pie-chart>
+        <div ref="chart" :style="{ width: '100%', height: '400px' }"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import BarChart from '@/components/BarChart.vue'
-import LineChart from '@/components/LineChart.vue'
-import PieChart from '@/components/PieChart.vue'
+import axios from 'axios';
+import { useAuthStore } from '@/store';
+import { ref, onMounted } from 'vue';
+import * as echarts from 'echarts';
 
 export default {
   name: 'Profile',
-  components: {
-    BarChart,
-    LineChart,
-    PieChart
-  },
-  data() {
-    return {
-      totalThisWeek: 70,
-      totalLastWeek: 50,
-      barChartOptionsThisWeek: {
-        xAxis: {
-          type: 'category',
-          data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            data: [10, 15, 20, 10, 5, 5, 5],
-            type: 'bar'
-          }
-        ]
+  setup() {
+    const authStore = useAuthStore();
+    const stuNo = authStore.stuNo;
+    const chart = ref(null);
+    let chartInstance = null;
+
+    const lineChartOptions = {
+      xAxis: {
+        type: 'category',
+        data: [], // 动态生成
       },
-      barChartOptionsLastWeek: {
-        xAxis: {
-          type: 'category',
-          data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            data: [5, 10, 15, 10, 5, 5, 0],
-            type: 'bar'
-          }
-        ]
+      yAxis: {
+        type: 'value',
       },
-      lineChartOptions: {
-        xAxis: {
-          type: 'category',
-          data: ['�??一�??', '�??二�??', '�??三�??', '�??四�??', '�??五�??']
+      series: [
+        {
+          data: [],
+          type: 'line',
         },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            data: [80, 85, 90, 75, 95],
-            type: 'line'
-          }
-        ]
-      },
-      pieChartOptions: {
-        series: [
-          {
-            name: '做�?�类�??',
-            type: 'pie',
-            radius: '50%',
-            data: [
-              { value: 40, name: '选择�??' },
-              { value: 30, name: '�??空�??' },
-              { value: 20, name: '判断�??' },
-              { value: 10, name: '简答�??' }
-            ]
-          }
-        ]
+      ],
+    };
+
+    const fetchData = async () => {
+      try {
+        const url = '/api/score/' + stuNo;
+        const responseLineChart = await axios.get(url);
+        const scores = responseLineChart.data.data;
+        const days = generateLabels(scores.length);
+
+        lineChartOptions.series[0].data = scores;
+        lineChartOptions.xAxis.data = days;
+
+        if (chartInstance) {
+          chartInstance.setOption(lineChartOptions);
+        }
+      } catch (error) {
+        console.error('请求数据失败:', error);
       }
-    }
+    };
+
+    onMounted(() => {
+      chartInstance = echarts.init(chart.value);
+      chartInstance.setOption(lineChartOptions);
+      fetchData();
+    });
+
+    return {
+      chart,
+      lineChartOptions,
+    };
   },
-  computed: {
-    diff() {
-      return this.totalThisWeek - this.totalLastWeek;
-    },
-    comparisonText() {
-      return this.diff > 0 ? '增加' : '减少';
-    }
+};
+
+// 生成对应数量的标签
+function generateLabels(length) {
+  const days = [];
+  const date = new Date();
+
+  for (let i = 0; i < length; i++) {
+    days.unshift(`${date.getMonth() + 1}/${date.getDate()}`);
+    date.setDate(date.getDate() - 1);
   }
+
+  return days;
 }
 </script>
 
