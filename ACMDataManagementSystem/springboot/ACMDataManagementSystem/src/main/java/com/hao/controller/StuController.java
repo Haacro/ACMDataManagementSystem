@@ -1,5 +1,6 @@
 package com.hao.controller;
 
+import com.hao.anno.Log;
 import com.hao.pojo.PageBean;
 import com.hao.pojo.Result;
 import com.hao.pojo.Stu;
@@ -11,13 +12,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//@Lazy //延迟初始化 第一次使用时再实例化
+//@Scope("prototype") //设置该Bean作用域为非单例
 @Tag(name = "stus接口")
 @Slf4j
-@CrossOrigin(origins = {"http://localhost:5174", "http://localhost:7000"}) //允许跨域请求
+@CrossOrigin(origins = "http://localhost:8081") //允许跨域请求
 @RequestMapping("/stus")
 @RestController
 public class StuController {
@@ -39,6 +45,18 @@ public class StuController {
         return Result.success();
     }*/
 
+    @PostMapping("/register")
+    public Result register(@RequestBody @Validated Stu stu) {
+        Stu s = stuService.findByStuNo(stu.getStuNo());
+        if (s == null) {
+            stuService.register(stu);
+            return Result.success();
+        } else {
+            return Result.error("该学号已注册");
+        }
+    }
+
+    @Log
     @Operation(summary = "新增学生用户", description = "添加一个新的学生用户")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "新增成功"),
@@ -59,7 +77,7 @@ public class StuController {
     @GetMapping
     public Result page(
             @RequestParam(defaultValue = "1") @Parameter(description = "页码，默认值为1") Integer page,
-            @RequestParam(defaultValue = "100") @Parameter(description = "每页显示条数，默认值为100") Integer pageSize,
+            @RequestParam(defaultValue = "10") @Parameter(description = "每页显示条数，默认值为10") Integer pageSize,
             @Parameter(description = "学生编号") String stuNo,
             @RequestParam(required = false) @Parameter(description = "学生姓名") String stuName,
             @Parameter(description = "班级名称") String className,
@@ -84,6 +102,7 @@ public class StuController {
         return Result.success(stu);
     }
 
+    @Log
     @Operation(summary = "批量删除学生用户", description = "根据学生用户ID列表批量删除学生用户")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "删除成功"),
@@ -96,6 +115,7 @@ public class StuController {
         return Result.success();
     }
 
+    @Log
     @Operation(summary = "更新学生用户信息", description = "更新学生用户的详细信息")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "更新成功"),

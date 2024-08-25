@@ -14,6 +14,19 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 100MB
+  #redis连接信息
+  data:
+    redis:
+      host: 192.168.128.131
+      port: 6379
+      password: "031023"
+      database: 0
+      lettuce:
+        pool:
+          max-active: 8 #最大连接
+          max-idle: 8 #最大空闲连接
+          min-idle: 0 #最小空闲连接
+          max-wait: 100ms #连接等待时间
 
 #mybatis配置
 mybatis:
@@ -28,3 +41,8 @@ aliyun:
     accessKeyId: xxx
     accessKeySecret: xxx
     bucketName: web-test-aliyunoss
+
+#Spring事务管理日志
+logging:
+  level:
+    org.springframework.jdbc.support.JdbcTransactionManager: debug

@@ -10,6 +10,10 @@ public interface StuService {
 
     /*void deleteById(Integer id);*/
 
+    Stu findByStuNo(String stuNo);
+
+    void register(Stu stu);
+
     void add(Stu stu);
 
     PageBean page(Integer page, Integer pageSize, String stuNo, String stuName,

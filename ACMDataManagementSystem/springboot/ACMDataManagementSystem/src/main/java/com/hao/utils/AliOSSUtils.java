@@ -52,11 +52,11 @@ public class AliOSSUtils {
         String originalFilename = file.getOriginalFilename();
         String fileName = UUID.randomUUID().toString() + originalFilename.substring(originalFilename.lastIndexOf("."));
 
-        //上传文件到 OSS
+        // 上传文件到 OSS
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
         ossClient.putObject(bucketName, fileName, inputStream);
 
-        //文件访问路径
+        // 文件访问路径
         String url = endpoint.split("//")[0] + "//" + bucketName + "." + endpoint.split("//")[1] + "/" + fileName;
         // 关闭ossClient
         ossClient.shutdown();

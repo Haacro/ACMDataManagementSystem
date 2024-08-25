@@ -1,5 +1,6 @@
 package com.hao.controller;
 
+import com.hao.pojo.PageBean;
 import com.hao.pojo.Result;
 import com.hao.pojo.SubNum;
 import com.hao.service.DataService;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Tag(name = "data接口")
 @Slf4j
-@CrossOrigin(origins = {"http://localhost:5174", "http://localhost:7000"}) //允许跨域请求
+@CrossOrigin(origins = {"http://localhost:5175", "http://localhost:7000"}) //允许跨域请求
 @RestController
 public class DataController {
 
@@ -45,5 +46,20 @@ public class DataController {
         log.info("查询学生提交次数");
         List<SubNum> subNumList = dataService.getSub();
         return Result.success(subNumList);
+    }
+
+    @Operation(summary = "根据用户积分推荐题目", description = "根据用户当前积分查询分值高于该积分的题目")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "查询成功，返回分值高于该用户积分的题目"),
+            @ApiResponse(responseCode = "404", description = "未找到相关题目")
+    })
+    @GetMapping("/train/{stuNo}")
+    public Result getTrain(
+            @PathVariable @Parameter(description = "学生编号") String stuNo,
+            @RequestParam(defaultValue = "1") @Parameter(description = "页码，默认值为1") Integer page,
+            @RequestParam(defaultValue = "10") @Parameter(description = "每页显示条数，默认值为10") Integer pageSize) {
+        log.info("根据学生：{}积分推荐题目", stuNo);
+        PageBean pageBean = dataService.getTrain(page,pageSize,stuNo);
+        return Result.success(pageBean);
     }
 }

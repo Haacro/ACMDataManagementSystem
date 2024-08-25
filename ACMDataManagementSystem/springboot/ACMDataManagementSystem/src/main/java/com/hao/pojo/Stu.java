@@ -1,6 +1,8 @@
 package com.hao.pojo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,8 @@ public class Stu {
     private Integer id;
 
     @Schema(description = "学生编号")
+    @NotEmpty(message = "学生编号不能为空")
+    @Pattern(regexp = "^\\S{10}$", message = "学生编号必须是10位非空字符")
     private String stuNo;
 
     @Schema(description = "学生密码")

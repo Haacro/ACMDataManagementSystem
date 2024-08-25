@@ -21,7 +21,7 @@ import java.util.Map;
 
 @Tag(name = "Login接口")
 @Slf4j
-@CrossOrigin(origins = {"http://localhost:5174", "http://localhost:7000"}) //允许跨域请求
+@CrossOrigin(origins = {"http://localhost:5175", "http://localhost:7000"}) //允许跨域请求
 @RestController
 public class LoginController {
 

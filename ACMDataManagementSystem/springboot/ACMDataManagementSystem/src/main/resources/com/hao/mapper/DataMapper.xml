@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hao.mapper.DataMapper">
+    <select id="getProblemByScore" resultType="com.hao.pojo.CfProblem">
+        select id,
+               contest_id,
+               problem_id,
+               problem_name,
+               problem_rate,
+               tag,
+               url,
+               create_time,
+               update_time
+        from cf_problem
+        where problem_rate > (select stu_score from stu where stu_no = #{stuNo})
+        order by problem_rate
+    </select>
+</mapper>

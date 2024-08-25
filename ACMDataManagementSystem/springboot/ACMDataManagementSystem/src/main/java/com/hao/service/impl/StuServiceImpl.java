@@ -6,8 +6,10 @@ import com.hao.mapper.StuMapper;
 import com.hao.pojo.PageBean;
 import com.hao.pojo.Stu;
 import com.hao.service.StuService;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,6 +29,18 @@ public class StuServiceImpl implements StuService {
     public void deleteById(Integer id) {
         stuMapper.deleteById(id);
     }*/
+
+    @Override
+    public Stu findByStuNo(String stuNo) {
+        Stu s = stuMapper.findByStuNo(stuNo);
+        return s;
+    }
+
+    @Override
+    public void register(Stu stu) {
+        stu.setPassword(DigestUtils.md5Hex(stu.getPassword()));
+        stuMapper.insert(stu);
+    }
 
     @Override
     public void add(Stu stu) {
@@ -55,8 +69,10 @@ public class StuServiceImpl implements StuService {
         return stuMapper.getById(id);
     }
 
+    @Transactional(rollbackFor = Exception.class) //Spring事务管理
     @Override
     public void deleteByIds(List<Integer> ids) {
+        /*int i = 1 / 0;*/
         stuMapper.deleteByIds(ids);
     }
 
@@ -68,6 +84,7 @@ public class StuServiceImpl implements StuService {
 
     @Override
     public Stu login(Stu stu) {
+        stu.setPassword(DigestUtils.md5Hex(stu.getPassword()));
         return stuMapper.getByStuNoAndPassword(stu);
     }
 }
